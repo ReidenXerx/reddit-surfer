@@ -1,7 +1,8 @@
-import { RequestMethods } from '../constants'
+import { ContentType, RequestMethods } from '../constants'
 
 type RequestParams = {
   method: RequestMethods
+  contentType?: ContentType
   headers?: Record<string, string>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body?: Record<string, any> | null
@@ -9,13 +10,17 @@ type RequestParams = {
 
 export const fetchRequest = async <ReturnType>(
   url: string,
-  { method, headers = {}, body = null }: RequestParams,
+  { method, contentType, headers = {}, body = null }: RequestParams,
 ): Promise<ReturnType> => {
+  const configHeaders = new Headers(headers)
+
+  if (contentType) {
+    configHeaders.append('Content-Type', contentType)
+  }
   const config: RequestInit = {
     method,
     headers: {
-      'Content-Type': 'application/json',
-      ...headers,
+      ...configHeaders,
     },
   }
 
