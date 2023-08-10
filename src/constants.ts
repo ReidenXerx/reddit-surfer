@@ -1,4 +1,11 @@
-import { EndpointInfo, RequestMethods } from './types'
+import { EndpointInfo } from './types'
+
+export enum RequestMethods {
+  get = 'GET',
+  post = 'POST',
+  put = 'PUT',
+  delete = 'DELETE',
+}
 
 export const redditEndpoints: { [id: string]: EndpointInfo } = {
   access: {
