@@ -11,3 +11,9 @@ export type ApplicationCredentials = {
   clientId: string
   secret: string
 }
+
+export type AuthorizationData = {
+  appName: string
+  clientId: string
+  secret: string
+}

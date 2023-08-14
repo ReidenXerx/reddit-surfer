@@ -7,6 +7,12 @@ export enum RequestMethods {
   delete = 'DELETE',
 }
 
+export enum requestTypes {
+  access = 'ACCESS',
+  accessUser = 'ACCESS_USER',
+  bearer = 'BEARER',
+}
+
 export const redditEndpoints: { [id: string]: EndpointInfo } = {
   access: {
     full: 'https://www.reddit.com/api/v1/access_token',
@@ -24,3 +30,5 @@ export const redditEndpoints: { [id: string]: EndpointInfo } = {
     method: RequestMethods.get,
   },
 }
+
+export const callbackURL = 'http://localhost:5173/callback' // TODO: change when prod

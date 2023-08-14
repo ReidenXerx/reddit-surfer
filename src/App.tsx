@@ -1,38 +1,31 @@
 import './App.css'
-import { useAsyncEffect } from './hooks/useAsyncEffect'
 import {
-  getAccessToken,
-  oauth2Request,
   redirectToAutorizationPage,
+  oauth2ParametrizedRequest,
 } from './services/OAUTH2'
-import { redditEndpoints } from './constants'
+import { callbackURL, redditEndpoints, requestTypes } from './constants'
+import { AuthorizationData } from './types'
 import { APPNAME, API, SECRET } from './keys.json'
 
 export const App = () => {
-  // useAsyncEffect(async () => {
-  //   const { access_token } = await oauth2Request(
-  //     redditEndpoints['access'],
-  //     APPNAME,
-  //     API,
-  //     SECRET,
-  //   )
-  //   console.log(access_token)
-  // })
+  const authorizationData: AuthorizationData = {
+    appName: APPNAME,
+    clientId: API,
+    secret: SECRET,
+  }
   return (
     <>
-      <button
-        onClick={() =>
-          redirectToAutorizationPage(API, 'http://localhost:5173/callback')
-        }
-      >
+      <button onClick={() => redirectToAutorizationPage(API, callbackURL)}>
         Click
       </button>
       <button
         onClick={async () => {
-          const result = await getAccessToken(
-            API,
-            SECRET,
-            'http://localhost:5173/callback',
+          //const result = await getAccessToken(API, SECRET, callbackURL)
+          const result = await oauth2ParametrizedRequest(
+            requestTypes.accessUser,
+            redditEndpoints['access'],
+            authorizationData,
+            { callback: callbackURL },
           )
           console.log(result)
         }}
