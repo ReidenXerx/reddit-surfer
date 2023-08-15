@@ -11,6 +11,7 @@ export enum requestTypes {
   access = 'ACCESS',
   accessUser = 'ACCESS_USER',
   bearer = 'BEARER',
+  general = 'GENERAL',
 }
 
 export const redditEndpoints: { [id: string]: EndpointInfo } = {

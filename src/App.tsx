@@ -1,14 +1,11 @@
 import './App.css'
-import {
-  redirectToAutorizationPage,
-  oauth2ParametrizedRequest,
-} from './services/OAUTH2'
+import { redirectToAutorizationPage, request } from './services/OAUTH2'
 import { callbackURL, redditEndpoints, requestTypes } from './constants'
-import { AuthorizationData } from './types'
+import { ApplicationCredentials } from './types'
 import { APPNAME, API, SECRET } from './keys.json'
 
 export const App = () => {
-  const authorizationData: AuthorizationData = {
+  const authorizationData: ApplicationCredentials = {
     appName: APPNAME,
     clientId: API,
     secret: SECRET,
@@ -21,7 +18,7 @@ export const App = () => {
       <button
         onClick={async () => {
           //const result = await getAccessToken(API, SECRET, callbackURL)
-          const result = await oauth2ParametrizedRequest(
+          const result = await request(
             requestTypes.accessUser,
             redditEndpoints['access'],
             authorizationData,

@@ -1,5 +1,5 @@
 import { requestTypes } from '../constants'
-import { AuthorizationData, EndpointInfo } from '../types'
+import { ApplicationCredentials, EndpointInfo } from '../types'
 import { generateRandomState, getQueryParameter } from './utils'
 
 export const oauth2Request = async (
@@ -91,54 +91,68 @@ export const getAccessToken = async (
   return await response.json()
 }
 
-export const oauth2ParametrizedRequest = async (
-  type: requestTypes,
-  { short, method }: EndpointInfo,
-  { appName, clientId, secret }: AuthorizationData,
-  params?: Record<string, string>,
-) => {
-  let url: string = ''
-  let headers: Record<string, string> = {}
-  let body: string = ''
+type RequestFilling = {
+  url: string
+  headers: Record<string, string>
+  body: string
+}
 
-  switch (type) {
-    case requestTypes.access: {
-      url = short
-      headers = {
+type ExternalParameters = {
+  url: Record<string, string>
+  headers: Record<string, string>
+  body: Record<string, string>
+  callback: string
+}
+
+export const request = async (
+  type: string,
+  { short, method }: EndpointInfo,
+  { appName, clientId, secret }: ApplicationCredentials,
+  params?: Partial<ExternalParameters>,
+) => {
+  const fillingVariants = {
+    [requestTypes.access]: {
+      url: short,
+      headers: {
         'User-Agent': appName,
         Authorization: 'Basic ' + btoa(clientId + ':' + secret),
         'Content-Type': 'application/x-www-form-urlencoded',
-      }
-      body = 'grant_type=client_credentials'
-      break
-    }
-    case requestTypes.bearer: {
-      url = params
-        ? `${short}?${new URLSearchParams(params).toString()}`
-        : short
-
-      headers = {
+      },
+      body: 'grant_type=client_credentials',
+    },
+    [requestTypes.bearer]: {
+      url: params
+        ? `${short}?${new URLSearchParams(params.url).toString()}`
+        : short,
+      headers: {
         Authorization: `Bearer ${secret}`,
-      }
-      break
-    }
-    case requestTypes.accessUser: {
-      const code = getQueryParameter('code') || ''
-      url = short
-      headers = {
+      },
+      body: '',
+    },
+    [requestTypes.accessUser]: {
+      url: short,
+      headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         Authorization: 'Basic ' + btoa(clientId + ':' + secret),
-      }
-      body = new URLSearchParams({
+      },
+      body: new URLSearchParams({
         client_id: clientId,
         client_secret: secret,
         grant_type: 'authorization_code',
-        code: code,
+        code: getQueryParameter('code') || '',
         redirect_uri: !!params ? params.callback : '',
-      }).toString()
-    }
-  }
+      } as Record<string, string>).toString(),
+    },
+    [requestTypes.general]: {
+      url: params
+        ? `${short}?${new URLSearchParams(params.url).toString()}`
+        : short,
+      headers: params ? { ...params.body } : {},
+      body: params ? new URLSearchParams(params.body).toString() : '',
+    },
+  } as Record<string, RequestFilling>
 
+  const { url, headers, body } = fillingVariants[`${type}`]
   const response = await fetch(url, {
     method: method,
     headers: headers,
