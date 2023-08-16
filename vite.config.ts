@@ -11,10 +11,20 @@ export default defineConfig({
     open: true,
     host: true,
     proxy: {
-      '/api': {
-        target: 'https://hacker-news.firebaseio.com/v0',
+      '/access': {
+        target: 'https://www.reddit.com/api/v1/access_token',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+        rewrite: (path) => path.replace(/^\/access/, ''),
+      },
+      '/me': {
+        target: 'https://www.reddit.com/api/v1/me',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/me/, ''),
+      },
+      '/collection': {
+        target: 'https://www.reddit.com/api/v1/collections/collection',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/collection/, ''),
       },
     },
   },
