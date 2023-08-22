@@ -1,35 +1,13 @@
+import { ThemeProvider } from '@mui/material'
 import './App.css'
-import { redirectToAutorizationPage, request } from './services/OAUTH2'
-import { callbackURL, redditEndpoints, requestTypes } from './constants'
-import { ApplicationCredentials } from './types'
-import { APPNAME, API, SECRET } from './keys.json'
+import { AuthorizationPage } from './components/AuthorizationPage'
+import { theme } from './theme'
 
 export const App = () => {
-  const authorizationData: ApplicationCredentials = {
-    appName: APPNAME,
-    clientId: API,
-    secret: SECRET,
-  }
   return (
-    <>
-      <button onClick={() => redirectToAutorizationPage(API, callbackURL)}>
-        Click
-      </button>
-      <button
-        onClick={async () => {
-          //const result = await getAccessToken(API, SECRET, callbackURL)
-          const result = await request(
-            requestTypes.accessUser,
-            redditEndpoints['access'],
-            authorizationData,
-            { callback: callbackURL },
-          )
-          console.log(result)
-        }}
-      >
-        CLICK NEXT
-      </button>
-    </>
+    <ThemeProvider theme={theme}>
+      <AuthorizationPage />
+    </ThemeProvider>
   )
 }
 
