@@ -76,7 +76,7 @@ export const request = async (
   const response = await fetch(url, {
     method: method,
     headers: headers,
-    body: body,
+    body: body === '' ? undefined : body,
   })
 
   if (!response.ok) {

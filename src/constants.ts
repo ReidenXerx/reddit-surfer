@@ -33,3 +33,4 @@ export const redditEndpoints: { [id: string]: EndpointInfo } = {
 }
 
 export const callbackURL = 'http://localhost:5173/callback' // TODO: change when prod
+export const websiteURL = 'http://localhost:5173' // TODO: change when prod

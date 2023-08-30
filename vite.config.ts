@@ -17,7 +17,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/access/, ''),
       },
       '/me': {
-        target: 'https://www.reddit.com/api/v1/me',
+        target: 'https://oauth.reddit.com/api/v1/me',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/me/, ''),
       },
