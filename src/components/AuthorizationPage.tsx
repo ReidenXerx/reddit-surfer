@@ -1,22 +1,19 @@
 import { Button, Stack } from '@mui/material'
 import RedditIcon from '@mui/icons-material/Reddit'
 import { redirectToAutorizationPage, request } from '../services/OAUTH2'
-import {
-  callbackURL,
-  redditEndpoints,
-  requestTypes,
-  websiteURL,
-} from '../constants'
+import { callbackURL, redditEndpoints, requestTypes } from '../constants'
 import { ApplicationCredentials } from '../types'
 import { APPNAME, API, SECRET } from '../keys.json'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
 import { getQueryParameter } from '../services/utils'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { setUserAction } from '../store/slices/userSlice'
-import { userSelector } from '../store/selectors'
+import { useNavigate } from 'react-router-dom'
+import { setBearerAction } from '../store/slices/bearerSlice'
 
 export const AuthorizationPage = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const authorizationData: ApplicationCredentials = {
     appName: APPNAME,
@@ -26,18 +23,19 @@ export const AuthorizationPage = () => {
 
   useAsyncEffect(async () => {
     if (getQueryParameter('code') !== null) {
-      const { access_token } = await request(
+      const { access_token, expires_in } = await request(
         requestTypes.accessUser,
         redditEndpoints['access'],
         authorizationData,
         { callback: callbackURL },
       )
+      dispatch(setBearerAction(access_token))
+      console.log(expires_in)
       const user = await request(requestTypes.bearer, redditEndpoints['me'], {
         secret: access_token,
       } as ApplicationCredentials)
       dispatch(setUserAction(user))
-      //console.log(useSelector(userSelector))
-      //window.location.href = ` ${websiteURL}/user`
+      navigate(user.subreddit.url)
     }
   }, [])
 

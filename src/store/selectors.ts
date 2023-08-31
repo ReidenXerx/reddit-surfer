@@ -7,4 +7,5 @@ import { RootState } from './store'
 //     'none',
 // )
 
-export const userSelector = (state: RootState) => state.user.value
+export const getUserDataSelector = (state: RootState) => state.user.value
+export const getBearerSelector = (state: RootState) => state.bearer.value

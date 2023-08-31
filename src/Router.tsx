@@ -10,7 +10,7 @@ const RedditRouter = () => {
       <Routes>
         <Route path="/" element={<AuthorizationPage />} />
         <Route path="/callback" element={<AuthorizationPage />} />
-        <Route path="/user" element={<UserInfo />} />
+        <Route path="/user/*" element={<UserInfo />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
