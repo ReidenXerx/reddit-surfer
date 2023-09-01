@@ -1,4 +1,4 @@
-import { Button, Stack } from '@mui/material'
+import { Button } from '@mui/material'
 import RedditIcon from '@mui/icons-material/Reddit'
 import { redirectToAutorizationPage, request } from '../services/OAUTH2'
 import { callbackURL, redditEndpoints, requestTypes } from '../constants'
@@ -11,7 +11,7 @@ import { setUserAction } from '../store/slices/userSlice'
 import { useNavigate } from 'react-router-dom'
 import { setBearerAction } from '../store/slices/bearerSlice'
 
-export const AuthorizationPage = () => {
+export const AuthorizationButton = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -35,19 +35,17 @@ export const AuthorizationPage = () => {
         secret: access_token,
       } as ApplicationCredentials)
       dispatch(setUserAction(user))
-      navigate(user.subreddit.url)
+      navigate('/')
     }
   }, [])
 
   return (
-    <Stack alignItems="center">
-      <Button
-        variant="contained"
-        endIcon={<RedditIcon />}
-        onClick={() => redirectToAutorizationPage(API, callbackURL)}
-      >
-        Log in with Reddit
-      </Button>
-    </Stack>
+    <Button
+      variant="contained"
+      endIcon={<RedditIcon />}
+      onClick={() => redirectToAutorizationPage(API, callbackURL)}
+    >
+      Log in with Reddit
+    </Button>
   )
 }

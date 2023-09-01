@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 export type UserState = {
-  value: Record<string, string>
+  value: Record<string, string | Record<string, string>> | Array<number>
 }
 
 export const initialState: UserState = {

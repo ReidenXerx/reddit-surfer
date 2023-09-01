@@ -3,21 +3,17 @@ import { Avatar, Box, Menu, MenuItem, Typography } from '@mui/material'
 
 type DropMenuProps = {
   snoovatar_img: string
-  total_karma: string
   name: string
+  fields: Record<string, () => null>
 }
 
-export const DropMenu = ({
-  snoovatar_img,
-  total_karma,
-  name,
-}: DropMenuProps) => {
+export const DropMenu = ({ snoovatar_img, name, fields }: DropMenuProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const fieldsNamesAndFunctions = Object.entries(fields)
 
   const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
-
   const handleClose = () => {
     setAnchorEl(null)
   }
@@ -47,8 +43,14 @@ export const DropMenu = ({
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        {fieldsNamesAndFunctions.map((menuItemData) => (
+          <MenuItem
+            key={menuItemData[0]}
+            onClick={() => setAnchorEl(menuItemData[1])}
+          >
+            {menuItemData[0]}
+          </MenuItem>
+        ))}
       </Menu>
     </>
   )
