@@ -9,12 +9,11 @@ import { setBearerAction } from '../store/slices/bearerSlice'
 import { setUserAction } from '../store/slices/userSlice'
 
 export const AppHeader = () => {
-  const { snoovatar_img, name, subreddit } = useSelector<
-    RootState,
-    Record<string, any>
-  >(getUserDataSelector)
-  const url = subreddit?.url ?? '/'
-  const display_name_prefixed = subreddit?.display_name_prefixed ?? ''
+  const data = useSelector<RootState, Record<string, any>>(getUserDataSelector)
+  const snoovatar_img = data?.snoovatar_img ?? ''
+  const name = data?.name ?? ''
+  const url = data?.subreddit?.url ?? ''
+  const display_name_prefixed = data?.subreddit?.display_name_prefixed ?? ''
   const bearer = useSelector(getBearerSelector)
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -24,7 +23,7 @@ export const AppHeader = () => {
       return null
     },
     Logout: () => {
-      navigate('/')
+      navigate('/login')
       dispatch(setBearerAction(null))
       dispatch(setUserAction({}))
       return null

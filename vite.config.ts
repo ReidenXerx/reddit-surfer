@@ -26,6 +26,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/collection/, ''),
       },
+      '/prefs': {
+        target: 'https://oauth.reddit.com/api/v1/me/prefs',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/prefs/, ''),
+      },
     },
   },
   build: {

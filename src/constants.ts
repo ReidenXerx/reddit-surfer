@@ -5,6 +5,7 @@ export enum RequestMethods {
   post = 'POST',
   put = 'PUT',
   delete = 'DELETE',
+  patch = 'PATCH',
 }
 
 export enum requestTypes {
@@ -29,6 +30,16 @@ export const redditEndpoints: { [id: string]: EndpointInfo } = {
     full: 'https://www.reddit.com/api/v1/collections/collection',
     short: '/collection',
     method: RequestMethods.get,
+  },
+  prefs_get: {
+    full: 'https://www.reddit.com/api/v1/me/prefs',
+    short: '/prefs',
+    method: RequestMethods.get,
+  },
+  prefs_patch: {
+    full: 'https://www.reddit.com/api/v1/me/prefs',
+    short: '/prefs',
+    method: RequestMethods.patch,
   },
 }
 

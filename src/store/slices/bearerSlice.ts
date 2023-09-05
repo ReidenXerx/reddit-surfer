@@ -1,11 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 export type BearerState = {
-  value: string
+  value: string | null
 }
 
 export const initialState: BearerState = {
-  value: '',
+  value: null,
 }
 
 const bearerSlice = createSlice({
