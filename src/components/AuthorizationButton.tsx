@@ -23,14 +23,14 @@ export const AuthorizationButton = () => {
 
   useAsyncEffect(async () => {
     if (getQueryParameter('code') !== null) {
-      const { access_token, expires_in } = await request(
+      const { access_token, expires_in, scope } = await request(
         requestTypes.accessUser,
         redditEndpoints['access'],
         authorizationData,
         { callback: callbackURL },
       )
       dispatch(setBearerAction(access_token))
-      console.log(expires_in)
+      console.log(expires_in, scope)
       const user = await request(requestTypes.bearer, redditEndpoints['me'], {
         secret: access_token,
       } as ApplicationCredentials)

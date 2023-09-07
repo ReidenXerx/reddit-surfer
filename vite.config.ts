@@ -31,6 +31,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/prefs/, ''),
       },
+      '/prefs2': {
+        target: 'https://www.reddit.com/api/v1/me/prefs',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/prefs2/, ''),
+      },
     },
   },
   build: {
