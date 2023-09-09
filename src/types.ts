@@ -11,3 +11,5 @@ export type ApplicationCredentials = {
   clientId: string
   secret: string
 }
+
+export type UnknownResponseData = Record<string, any>

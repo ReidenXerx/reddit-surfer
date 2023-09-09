@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { redditEndpoints, requestTypes } from '../constants'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
 import { request } from '../services/OAUTH2'
-import { ApplicationCredentials } from '../types'
+import { ApplicationCredentials, UnknownResponseData } from '../types'
 import { getBearerSelector } from '../store/selectors'
 import { useState } from 'react'
 import { returnObjectAsJSX } from '../services/utils'
@@ -21,9 +21,26 @@ export const Preferences = () => {
   const access_token = useSelector(getBearerSelector)
   const [prefsData, setPrefsData] = useState({})
   const [value, setValue] = useState(0)
+  const { video_autoplay, label_nsfw, feed_recommendations_enabled } =
+    prefsData as UnknownResponseData
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue)
+  }
+
+  const applyPreferencesChanges = async (
+    bodyParams: Record<string, string | boolean>,
+  ) => {
+    return await request(
+      requestTypes.bearer,
+      redditEndpoints['prefs_patch'],
+      {
+        secret: access_token,
+      } as ApplicationCredentials,
+      {
+        body: bodyParams,
+      },
+    )
   }
 
   useAsyncEffect(async () => {
@@ -33,7 +50,6 @@ export const Preferences = () => {
       } as ApplicationCredentials),
     )
   })
-  //return <div>{returnObjectAsJSX(prefsData)}</div>
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -54,23 +70,29 @@ export const Preferences = () => {
         <Stack>
           <ControlledSwitch
             label="Video Autoplay"
-            defaultState={prefsData?.video_autoplay}
-            onSwitch={(newState) => {
-              const headers = new Headers()
-              headers.append('Authorization', `bearer ${access_token}`)
-
-              const requestOptions = {
-                method: 'PATCH',
-                headers: headers,
-                body: JSON.stringify({
-                  video_autoplay: newState,
-                }),
-              }
-
-              fetch('/prefs', requestOptions)
-                .then((response) => response.json())
-                .then((result) => console.log(result))
-                .catch((error) => console.log('error', error))
+            defaultState={video_autoplay}
+            onSwitch={async (newState) => {
+              applyPreferencesChanges({
+                video_autoplay: newState,
+              })
+            }}
+          />
+          <ControlledSwitch
+            label="Label NSFW"
+            defaultState={label_nsfw}
+            onSwitch={async (newState) => {
+              applyPreferencesChanges({
+                label_nsfw: newState,
+              })
+            }}
+          />
+          <ControlledSwitch
+            label="Feed Recommendations"
+            defaultState={feed_recommendations_enabled}
+            onSwitch={async (newState) => {
+              applyPreferencesChanges({
+                feed_recommendations_enabled: newState,
+              })
             }}
           />
         </Stack>

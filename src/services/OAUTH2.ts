@@ -17,10 +17,10 @@ type RequestFilling = {
   body: string
 }
 
-type ExternalParameters = {
+export type ExternalParameters = {
   url: Record<string, string>
   headers: Record<string, string>
-  body: Record<string, string>
+  body: Record<string, string | boolean>
   callback: string
 }
 
@@ -41,13 +41,13 @@ export const request = async (
       body: 'grant_type=client_credentials',
     },
     [requestTypes.bearer]: {
-      url: params
+      url: params?.url
         ? `${short}?${new URLSearchParams(params.url).toString()}`
         : short,
       headers: {
-        Authorization: `Bearer ${secret}`,
+        Authorization: `bearer ${secret}`,
       },
-      body: '',
+      body: params?.body ? JSON.stringify(params.body) : '',
     },
     [requestTypes.accessUser]: {
       url: short,
@@ -64,11 +64,11 @@ export const request = async (
       } as Record<string, string>).toString(),
     },
     [requestTypes.general]: {
-      url: params
+      url: params?.url
         ? `${short}?${new URLSearchParams(params.url).toString()}`
         : short,
-      headers: params ? { ...params.body } : {},
-      body: params ? new URLSearchParams(params.body).toString() : '',
+      headers: params?.headers ? { ...params.headers } : {},
+      body: params?.body ? JSON.stringify(params.body) : '',
     },
   } as Record<string, RequestFilling>
 
@@ -80,7 +80,11 @@ export const request = async (
   })
 
   if (!response.ok) {
-    throw new Error(`Network response was not ok. ${response.statusText}`)
+    throw new Error(
+      `Network response was not ok. ${
+        response.statusText
+      } METHOD: ${method} HEADERS: ${JSON.stringify(headers)} BODY: ${body}`,
+    )
   }
 
   return await response.json()

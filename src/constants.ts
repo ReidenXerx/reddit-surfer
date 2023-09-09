@@ -32,12 +32,12 @@ export const redditEndpoints: { [id: string]: EndpointInfo } = {
     method: RequestMethods.get,
   },
   prefs_get: {
-    full: 'https://www.reddit.com/api/v1/me/prefs',
+    full: 'https://oauth.reddit.com/api/v1/me/prefs',
     short: '/prefs',
     method: RequestMethods.get,
   },
   prefs_patch: {
-    full: 'https://www.reddit.com/api/v1/me/prefs',
+    full: 'https://oauth.reddit.com/api/v1/me/prefs',
     short: '/prefs',
     method: RequestMethods.patch,
   },

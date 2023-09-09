@@ -4,10 +4,11 @@ import { Box, Stack, Tooltip, Typography, styled } from '@mui/material'
 import { RootState } from '../store/store'
 import SettingsIcon from '@mui/icons-material/Settings'
 import { useNavigate } from 'react-router-dom'
+import { UnknownResponseData } from '../types'
 
 export const UserInfo = () => {
   const { snoovatar_size, snoovatar_img, name, total_karma, created_utc } =
-    useSelector<RootState, Record<string, any>>(getUserDataSelector)
+    useSelector<RootState, UnknownResponseData>(getUserDataSelector)
   const bearer = useSelector(getBearerSelector)
   const navigate = useNavigate()
 

@@ -7,9 +7,10 @@ import { AuthorizationButton } from './AuthorizationButton'
 import { useNavigate } from 'react-router-dom'
 import { setBearerAction } from '../store/slices/bearerSlice'
 import { setUserAction } from '../store/slices/userSlice'
+import { UnknownResponseData } from '../types'
 
 export const AppHeader = () => {
-  const data = useSelector<RootState, Record<string, any>>(getUserDataSelector)
+  const data = useSelector<RootState, UnknownResponseData>(getUserDataSelector)
   const snoovatar_img = data?.snoovatar_img ?? ''
   const name = data?.name ?? ''
   const url = data?.subreddit?.url ?? ''
