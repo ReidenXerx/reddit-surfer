@@ -19,7 +19,6 @@ export const DropMenu = ({ snoovatar_img, name, fields }: DropMenuProps) => {
   }
   return (
     <>
-      {' '}
       <Box
         sx={{
           cursor: 'pointer',

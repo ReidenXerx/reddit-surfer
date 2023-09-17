@@ -43,7 +43,13 @@ export const AuthorizationButton = () => {
     <Button
       variant="contained"
       endIcon={<RedditIcon />}
-      onClick={() => redirectToAutorizationPage(API, callbackURL)}
+      onClick={() =>
+        redirectToAutorizationPage(API, callbackURL, [
+          'identity',
+          'account',
+          'history',
+        ])
+      }
     >
       Log in with Reddit
     </Button>

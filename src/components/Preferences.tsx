@@ -2,36 +2,35 @@ import { useSelector } from 'react-redux'
 import { redditEndpoints, requestTypes } from '../constants'
 import { useAsyncEffect } from '../hooks/useAsyncEffect'
 import { request } from '../services/OAUTH2'
-import { ApplicationCredentials, UnknownResponseData } from '../types'
-import { getBearerSelector } from '../store/selectors'
+import { ApplicationCredentials } from '../types'
+import { selectBearer } from '../store/selectors'
 import { useState } from 'react'
 import { returnObjectAsJSX } from '../services/utils'
 import { Box, Stack, Tab, Tabs } from '@mui/material'
 import { CustomTabPanel } from './CustomTabPanel'
 import { ControlledSwitch } from './ControlledSwitch'
 
-const a11yProps = (index: number) => {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  }
-}
+const a11yProps = (index: number) => ({
+  id: `simple-tab-${index}`,
+  'aria-controls': `simple-tabpanel-${index}`,
+})
 
 export const Preferences = () => {
-  const access_token = useSelector(getBearerSelector)
+  const access_token = useSelector(selectBearer)
   const [prefsData, setPrefsData] = useState({})
   const [value, setValue] = useState(0)
-  const { video_autoplay, label_nsfw, feed_recommendations_enabled } =
-    prefsData as UnknownResponseData
+  const { video_autoplay, feed_recommendations_enabled } = prefsData as Record<
+    string,
+    boolean
+  >
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) =>
     setValue(newValue)
-  }
 
-  const applyPreferencesChanges = async (
+  const applyPreferencesChanges = (
     bodyParams: Record<string, string | boolean>,
-  ) => {
-    return await request(
+  ) =>
+    request(
       requestTypes.bearer,
       redditEndpoints['prefs_patch'],
       {
@@ -41,7 +40,6 @@ export const Preferences = () => {
         body: bodyParams,
       },
     )
-  }
 
   useAsyncEffect(async () => {
     setPrefsData(
@@ -71,25 +69,16 @@ export const Preferences = () => {
           <ControlledSwitch
             label="Video Autoplay"
             defaultState={video_autoplay}
-            onSwitch={async (newState) => {
+            onSwitch={(newState) => {
               applyPreferencesChanges({
                 video_autoplay: newState,
               })
             }}
           />
           <ControlledSwitch
-            label="Label NSFW"
-            defaultState={label_nsfw}
-            onSwitch={async (newState) => {
-              applyPreferencesChanges({
-                label_nsfw: newState,
-              })
-            }}
-          />
-          <ControlledSwitch
             label="Feed Recommendations"
             defaultState={feed_recommendations_enabled}
-            onSwitch={async (newState) => {
+            onSwitch={(newState) => {
               applyPreferencesChanges({
                 feed_recommendations_enabled: newState,
               })
@@ -98,7 +87,7 @@ export const Preferences = () => {
         </Stack>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        {returnObjectAsJSX(prefsData)}
+        {returnObjectAsJSX({ video_autoplay, feed_recommendations_enabled })}
       </CustomTabPanel>
     </Box>
   )

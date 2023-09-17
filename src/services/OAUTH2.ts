@@ -1,14 +1,31 @@
 import { requestTypes } from '../constants'
 import { ApplicationCredentials, EndpointInfo } from '../types'
-import { generateRandomState, getQueryParameter } from './utils'
+import {
+  generateRandomState,
+  getQueryParameter,
+  makeStringFromArray,
+} from './utils'
+
+// export const redirectToAutorizationPage = (
+//   clientId: string,
+//   redirectURI: string,
+// ) => {
+//   window.location.href = `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${generateRandomState(
+//     16,
+//   )}&redirect_uri=${redirectURI}&scope=identity%20account&duration=temporary`
+// }
 
 export const redirectToAutorizationPage = (
   clientId: string,
   redirectURI: string,
+  scope: Array<string>,
+  duration = 'temporary',
 ) => {
   window.location.href = `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${generateRandomState(
     16,
-  )}&redirect_uri=${redirectURI}&scope=identity%20account&duration=temporary`
+  )}&redirect_uri=${redirectURI}&scope=${makeStringFromArray(
+    scope,
+  )}&duration=${duration}`
 }
 
 type RequestFilling = {

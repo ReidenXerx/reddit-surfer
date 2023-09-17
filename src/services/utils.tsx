@@ -12,9 +12,8 @@ export const generateRandomState = (length: number): string => {
   return result
 }
 
-export const getQueryParameter = (paramName: string) => {
-  return new URLSearchParams(window.location.search).get(paramName)
-}
+export const getQueryParameter = (paramName: string) =>
+  new URLSearchParams(window.location.search).get(paramName)
 
 export const returnObjectAsJSX = (obj: Record<string, any>, level = 0) => {
   const jsxArray: JSX.Element[] = []
@@ -41,3 +40,10 @@ export const returnObjectAsJSX = (obj: Record<string, any>, level = 0) => {
   }
   return jsxArray
 }
+
+export const makeStringFromArray = (arr: Array<string>) =>
+  arr.length > 1
+    ? arr.reduce((first, second) => `${first}%20${second}`, '')
+    : arr[0]
+    ? arr[0]
+    : ''

@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { getBearerSelector, getUserDataSelector } from '../store/selectors'
+import { selectBearer, selectUserData } from '../store/selectors'
 import { Box, Stack, Tooltip, Typography, styled } from '@mui/material'
 import { RootState } from '../store/store'
 import SettingsIcon from '@mui/icons-material/Settings'
@@ -8,8 +8,8 @@ import { UnknownResponseData } from '../types'
 
 export const UserInfo = () => {
   const { snoovatar_size, snoovatar_img, name, total_karma, created_utc } =
-    useSelector<RootState, UnknownResponseData>(getUserDataSelector)
-  const bearer = useSelector(getBearerSelector)
+    useSelector<RootState, UnknownResponseData>(selectUserData)
+  const bearer = useSelector(selectBearer)
   const navigate = useNavigate()
 
   const WhiteBoldTypography = styled(Typography)`

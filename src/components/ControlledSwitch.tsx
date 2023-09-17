@@ -14,9 +14,11 @@ export const ControlledSwitch = (props: ControlledSwitchProps) => {
     target: { checked },
   }: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(checked)
-    onSwitch && onSwitch(checked)
+    onSwitch?.(checked)
   }
-  return (
+  return checked === undefined ? (
+    <></>
+  ) : (
     <FormControlLabel
       control={
         <Switch checked={checked} onChange={handleChange} name={label} />

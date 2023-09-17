@@ -6,9 +6,12 @@ interface TabPanelProps {
   value: number
 }
 
-export const CustomTabPanel = (props: TabPanelProps) => {
-  const { children, value, index, ...other } = props
-
+export const CustomTabPanel = ({
+  children,
+  value,
+  index,
+  ...other
+}: TabPanelProps) => {
   return (
     <div
       role="tabpanel"

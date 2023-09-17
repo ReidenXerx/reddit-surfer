@@ -1,21 +1,19 @@
 import { AppBar, Avatar, Box, Stack, Typography } from '@mui/material'
-import { getBearerSelector, getUserDataSelector } from '../store/selectors'
+import { selectBearer, selectUserData } from '../store/selectors'
 import { useDispatch, useSelector } from 'react-redux'
 import { DropMenu } from './DropMenu'
-import { RootState } from '../store/store'
 import { AuthorizationButton } from './AuthorizationButton'
 import { useNavigate } from 'react-router-dom'
 import { setBearerAction } from '../store/slices/bearerSlice'
 import { setUserAction } from '../store/slices/userSlice'
-import { UnknownResponseData } from '../types'
 
 export const AppHeader = () => {
-  const data = useSelector<RootState, UnknownResponseData>(getUserDataSelector)
+  const data = useSelector(selectUserData)
   const snoovatar_img = data?.snoovatar_img ?? ''
   const name = data?.name ?? ''
   const url = data?.subreddit?.url ?? ''
   const display_name_prefixed = data?.subreddit?.display_name_prefixed ?? ''
-  const bearer = useSelector(getBearerSelector)
+  const bearer = useSelector(selectBearer)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const fields = {
