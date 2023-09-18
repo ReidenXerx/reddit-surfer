@@ -64,7 +64,7 @@ export const request = async (
       headers: {
         Authorization: `bearer ${secret}`,
       },
-      body: params?.body ? JSON.stringify(params.body) : '',
+      body: JSON.stringify(params?.body ?? undefined),
     },
     [requestTypes.accessUser]: {
       url: short,
@@ -84,8 +84,8 @@ export const request = async (
       url: params?.url
         ? `${short}?${new URLSearchParams(params.url).toString()}`
         : short,
-      headers: params?.headers ? { ...params.headers } : {},
-      body: params?.body ? JSON.stringify(params.body) : '',
+      headers: { ...(params?.headers ?? {}) },
+      body: JSON.stringify(params?.body ?? undefined),
     },
   } as Record<string, RequestFilling>
 
@@ -93,7 +93,7 @@ export const request = async (
   const response = await fetch(url, {
     method: method,
     headers: headers,
-    body: body === '' ? undefined : body,
+    body: body ?? undefined,
   })
 
   if (!response.ok) {

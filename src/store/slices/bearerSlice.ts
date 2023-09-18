@@ -16,7 +16,7 @@ const bearerSlice = createSlice({
       state: BearerState,
       { payload }: PayloadAction<string | null>,
     ) => {
-      state.value = payload ? payload : initialState.value
+      state.value = payload ?? initialState.value
     },
   },
 })

@@ -25,11 +25,9 @@ export const returnObjectAsJSX = (obj: Record<string, any>, level = 0) => {
       jsxArray.push(
         <Fragment key={key}>
           <div style={getIndentStyle(level)}>
-            {key}:{' '}
-            {obj[key] === true
-              ? 'true'
-              : obj[key] === false
-              ? 'false'
+            {key}:<span> </span>
+            {typeof obj[key] === 'boolean'
+              ? obj[key].toString()
               : typeof obj[key] === 'object'
               ? returnObjectAsJSX(obj[key], level + 1)
               : obj[key]}

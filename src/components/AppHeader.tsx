@@ -9,10 +9,11 @@ import { setUserAction } from '../store/slices/userSlice'
 
 export const AppHeader = () => {
   const data = useSelector(selectUserData)
-  const snoovatar_img = data?.snoovatar_img ?? ''
-  const name = data?.name ?? ''
-  const url = data?.subreddit?.url ?? ''
-  const display_name_prefixed = data?.subreddit?.display_name_prefixed ?? ''
+  const snoovatar_img = (data?.snoovatar_img as string) ?? ''
+  const name = (data?.name as string) ?? ''
+  const url = (data?.subreddit as { [id: string]: string })?.url ?? ''
+  const display_name_prefixed =
+    (data?.subreddit as { [id: string]: boolean })?.display_name_prefixed ?? ''
   const bearer = useSelector(selectBearer)
   const navigate = useNavigate()
   const dispatch = useDispatch()

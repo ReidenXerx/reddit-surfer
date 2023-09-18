@@ -22,7 +22,7 @@ const userSlice = createSlice({
       state: UserState,
       { payload }: PayloadAction<Record<string, string> | null>,
     ) => {
-      state.value = payload ? { ...payload } : initialState.value
+      state.value = { ...(payload ?? initialState.value) }
     },
   },
 })
