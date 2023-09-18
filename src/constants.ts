@@ -5,6 +5,7 @@ export enum RequestMethods {
   post = 'POST',
   put = 'PUT',
   delete = 'DELETE',
+  patch = 'PATCH',
 }
 
 export enum requestTypes {
@@ -30,6 +31,17 @@ export const redditEndpoints: { [id: string]: EndpointInfo } = {
     short: '/collection',
     method: RequestMethods.get,
   },
+  prefs_get: {
+    full: 'https://oauth.reddit.com/api/v1/me/prefs',
+    short: '/prefs',
+    method: RequestMethods.get,
+  },
+  prefs_patch: {
+    full: 'https://oauth.reddit.com/api/v1/me/prefs',
+    short: '/prefs',
+    method: RequestMethods.patch,
+  },
 }
 
 export const callbackURL = 'http://localhost:5173/callback' // TODO: change when prod
+export const websiteURL = 'http://localhost:5173' // TODO: change when prod

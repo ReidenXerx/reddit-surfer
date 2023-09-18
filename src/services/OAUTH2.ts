@@ -1,14 +1,31 @@
 import { requestTypes } from '../constants'
 import { ApplicationCredentials, EndpointInfo } from '../types'
-import { generateRandomState, getQueryParameter } from './utils'
+import {
+  generateRandomState,
+  getQueryParameter,
+  makeStringFromArray,
+} from './utils'
+
+// export const redirectToAutorizationPage = (
+//   clientId: string,
+//   redirectURI: string,
+// ) => {
+//   window.location.href = `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${generateRandomState(
+//     16,
+//   )}&redirect_uri=${redirectURI}&scope=identity%20account&duration=temporary`
+// }
 
 export const redirectToAutorizationPage = (
   clientId: string,
   redirectURI: string,
+  scope: Array<string>,
+  duration = 'temporary',
 ) => {
   window.location.href = `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${generateRandomState(
     16,
-  )}&redirect_uri=${redirectURI}&scope=identity&duration=temporary`
+  )}&redirect_uri=${redirectURI}&scope=${makeStringFromArray(
+    scope,
+  )}&duration=${duration}`
 }
 
 type RequestFilling = {
@@ -17,10 +34,10 @@ type RequestFilling = {
   body: string
 }
 
-type ExternalParameters = {
+export type ExternalParameters = {
   url: Record<string, string>
   headers: Record<string, string>
-  body: Record<string, string>
+  body: Record<string, string | boolean>
   callback: string
 }
 
@@ -41,13 +58,13 @@ export const request = async (
       body: 'grant_type=client_credentials',
     },
     [requestTypes.bearer]: {
-      url: params
+      url: params?.url
         ? `${short}?${new URLSearchParams(params.url).toString()}`
         : short,
       headers: {
-        Authorization: `Bearer ${secret}`,
+        Authorization: `bearer ${secret}`,
       },
-      body: '',
+      body: JSON.stringify(params?.body ?? undefined),
     },
     [requestTypes.accessUser]: {
       url: short,
@@ -64,11 +81,11 @@ export const request = async (
       } as Record<string, string>).toString(),
     },
     [requestTypes.general]: {
-      url: params
+      url: params?.url
         ? `${short}?${new URLSearchParams(params.url).toString()}`
         : short,
-      headers: params ? { ...params.body } : {},
-      body: params ? new URLSearchParams(params.body).toString() : '',
+      headers: { ...(params?.headers ?? {}) },
+      body: JSON.stringify(params?.body ?? undefined),
     },
   } as Record<string, RequestFilling>
 
@@ -76,11 +93,15 @@ export const request = async (
   const response = await fetch(url, {
     method: method,
     headers: headers,
-    body: body,
+    body: body ?? undefined,
   })
 
   if (!response.ok) {
-    throw new Error(`Network response was not ok. ${response.statusText}`)
+    throw new Error(
+      `Network response was not ok. ${
+        response.statusText
+      } METHOD: ${method} HEADERS: ${JSON.stringify(headers)} BODY: ${body}`,
+    )
   }
 
   return await response.json()
